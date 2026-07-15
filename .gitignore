@@ -1,4 +1,6 @@
 .*
+!.dockerignore
+!.env.example
 !.github
 !.github/workflows
 !.github/workflows/*

@@ -1,0 +1,8 @@
+services:
+  web2py:
+    build: .
+    env_file:
+      - .env.example
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
