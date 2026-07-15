@@ -1,2 +1,5 @@
 gunicorn
 google-cloud-firestore
+pydal==20260520.0
+rocket3==20260526.0
+yatl==20260518.1
