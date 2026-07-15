@@ -52,4 +52,18 @@ analytics_id =
 EOF
 fi
 
+if [ -n "${WEB2PY_ADMIN_PASSWORD:-}" ]; then
+    python - <<'PY'
+import os
+from gluon.validators import CRYPT
+
+port = int(os.environ.get("PORT", "8000"))
+password = os.environ["WEB2PY_ADMIN_PASSWORD"]
+path = os.path.join(os.environ.get("APP_ROOT", "/app"), f"parameters_{port}.py")
+
+with open(path, "w", encoding="utf-8") as fp:
+    fp.write('password="%s"\n' % CRYPT()(password)[0])
+PY
+fi
+
 exec "$@"

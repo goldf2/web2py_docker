@@ -17,6 +17,14 @@ Related migration documents:
 - Healthcheck path: `/`
 - Environment variables: copy the needed values from `.env.example`
 
+Optional admin environment variable:
+
+```text
+WEB2PY_ADMIN_PASSWORD=your-strong-admin-password
+```
+
+The admin app must be accessed over HTTPS when used remotely. Plain HTTP remote access to `/admin` is blocked by web2py as an insecure channel.
+
 The container starts web2py with:
 
 ```sh
