@@ -71,20 +71,27 @@ applications/*/private/
 
 不要把空卷直接挂到整个 `applications/`，否则会把镜像里的应用代码盖掉。
 
-推荐按应用的运行数据目录单独挂载：
+推荐只挂载一个运行数据根目录：
 
 ```text
-/app/applications/<app>/databases
-/app/applications/<app>/uploads
-/app/applications/<app>/sessions
-/app/applications/<app>/errors
+主机目录: /opt/web2py
+容器目录: /app/runtime
 ```
 
-如果 `private/` 里只有密钥或环境配置，优先改成 Coolify 环境变量。确实必须保留文件时，再单独挂载：
+容器启动时，`docker-entrypoint.sh` 会自动为每个应用创建运行数据目录，并把应用内部目录软链接过去：
 
 ```text
-/app/applications/<app>/private
+/app/applications/<app>/databases -> /app/runtime/<app>/databases
+/app/applications/<app>/uploads   -> /app/runtime/<app>/uploads
+/app/applications/<app>/sessions  -> /app/runtime/<app>/sessions
+/app/applications/<app>/errors    -> /app/runtime/<app>/errors
+/app/applications/<app>/cache     -> /app/runtime/<app>/cache
+/app/applications/<app>/private   -> /app/runtime/<app>/private
 ```
+
+这样新建 app 后不需要在 Coolify 里逐个增加挂载，只要重新部署或重启容器，入口脚本会自动创建 `/app/runtime/<new-app>/...` 并建立软链接。
+
+如果 `private/` 里只有密钥或环境配置，长期仍建议改成 Coolify 环境变量。短期保留文件时，`private/` 会随上述机制进入持久化目录。
 
 ## 迁移步骤
 
@@ -110,7 +117,7 @@ rsync -a applications/<app>/private /srv/web2py-data/<app>/
 ```
 
 5. 确认 Git 只管理代码目录，不管理运行数据目录。
-6. 在 Coolify 中创建 persistent storage，把数据目录挂载到容器内对应路径。
+6. 在 Coolify 中创建 persistent storage，把主机数据根目录挂载到容器 `/app/runtime`。
 7. 把 `appconfig.ini` 里的数据库、SMTP、第三方服务密钥迁移到 Coolify 环境变量或 Secret。
 8. 部署 Docker 版本，确认页面、登录、上传、数据库读写都正常。
 9. 确认新部署正常后，再下线旧裸服务器服务。
@@ -140,6 +147,7 @@ login = username:password
 如果只想先完成从裸服务器到 Coolify 的稳定迁移，按这个顺序做：
 
 1. 镜像里只放代码。
-2. `databases/`、`uploads/`、`sessions/`、`errors/` 单独做持久化挂载。
-3. `private/appconfig.ini` 暂时用 Coolify 文件挂载。
-4. 部署成功后，再把敏感配置逐步改成环境变量。
+2. 主机 `/opt/web2py` 挂载到容器 `/app/runtime`。
+3. `docker-entrypoint.sh` 自动创建每个 app 的运行目录软链接。
+4. `private/appconfig.ini` 暂时放入 `/app/runtime/<app>/private`。
+5. 部署成功后，再把敏感配置逐步改成环境变量。

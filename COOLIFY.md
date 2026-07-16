@@ -23,6 +23,32 @@ Optional admin environment variable:
 WEB2PY_ADMIN_PASSWORD=your-strong-admin-password
 ```
 
+Recommended runtime data environment variable:
+
+```text
+WEB2PY_RUNTIME_ROOT=/app/runtime
+```
+
+Recommended persistent storage:
+
+```text
+Host path:      /opt/web2py
+Container path: /app/runtime
+```
+
+At startup, `docker-entrypoint.sh` automatically creates app runtime directories and symlinks:
+
+```text
+/app/applications/<app>/databases -> /app/runtime/<app>/databases
+/app/applications/<app>/uploads   -> /app/runtime/<app>/uploads
+/app/applications/<app>/sessions  -> /app/runtime/<app>/sessions
+/app/applications/<app>/errors    -> /app/runtime/<app>/errors
+/app/applications/<app>/cache     -> /app/runtime/<app>/cache
+/app/applications/<app>/private   -> /app/runtime/<app>/private
+```
+
+When adding a new app, no new Coolify storage entry is required as long as `/app/runtime` is already mounted. The entrypoint will create `/app/runtime/<new-app>/...` automatically on container start.
+
 The admin app must be accessed over HTTPS when used remotely. Plain HTTP remote access to `/admin` is blocked by web2py as an insecure channel.
 
 The container starts web2py with:
@@ -53,7 +79,7 @@ web2py writes runtime data under each application directory, especially:
 - `applications/<app>/uploads`
 - `applications/<app>/private` when the app still reads `private/appconfig.ini`
 
-For a production app, add Coolify persistent storage for the specific app data directories you need to keep. Avoid mounting an empty volume over the whole `applications` directory unless you also initialize it with your app files, because that hides the applications copied into the image.
+For a production app, prefer one persistent storage root mounted at `/app/runtime`. Avoid mounting an empty volume over the whole `applications` directory unless you also initialize it with your app files, because that hides the applications copied into the image.
 
 The Docker build excludes runtime data and private config from the image. For existing bare-server deployments, migrate those directories into Coolify persistent storage before switching traffic. See `DATA_CODE_SEPARATION.md` for the full migration checklist.
 

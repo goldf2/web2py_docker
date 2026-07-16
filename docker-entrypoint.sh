@@ -2,15 +2,35 @@
 set -eu
 
 APP_ROOT="${APP_ROOT:-/app}"
+WEB2PY_RUNTIME_ROOT="${WEB2PY_RUNTIME_ROOT:-$APP_ROOT/runtime}"
+WEB2PY_RUNTIME_DIRS="${WEB2PY_RUNTIME_DIRS:-databases uploads sessions errors cache private}"
+
+mkdir -p "$WEB2PY_RUNTIME_ROOT"
 
 for app_dir in "$APP_ROOT"/applications/*; do
     [ -d "$app_dir" ] || continue
-    mkdir -p \
-        "$app_dir/databases" \
-        "$app_dir/uploads" \
-        "$app_dir/sessions" \
-        "$app_dir/errors" \
-        "$app_dir/private"
+    app_name="$(basename "$app_dir")"
+    for runtime_dir in $WEB2PY_RUNTIME_DIRS; do
+        target_dir="$WEB2PY_RUNTIME_ROOT/$app_name/$runtime_dir"
+        link_path="$app_dir/$runtime_dir"
+
+        mkdir -p "$target_dir"
+
+        if [ -L "$link_path" ]; then
+            current_target="$(readlink "$link_path" || true)"
+            [ "$current_target" = "$target_dir" ] || {
+                rm -f "$link_path"
+                ln -s "$target_dir" "$link_path"
+            }
+        elif [ -e "$link_path" ]; then
+            if [ -d "$link_path" ] && [ -z "$(find "$link_path" -mindepth 1 -maxdepth 1 2>/dev/null)" ]; then
+                rmdir "$link_path"
+                ln -s "$target_dir" "$link_path"
+            fi
+        else
+            ln -s "$target_dir" "$link_path"
+        fi
+    done
 done
 
 welcome_config="$APP_ROOT/applications/welcome/private/appconfig.ini"
