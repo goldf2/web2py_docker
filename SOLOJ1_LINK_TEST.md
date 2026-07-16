@@ -10,9 +10,9 @@
 当前 Docker 镜像只打包这些 web2py app：
 
 ```text
-applications/admin
-applications/welcome
-applications/soloj1
+applications/admin    # 内置默认应用，不做运行目录软链接
+applications/welcome  # 内置默认应用，不做运行目录软链接
+applications/soloj1   # 业务/测试应用，运行目录软链接到 /app/runtime/soloj1
 ```
 
 其它历史测试 app 不进入 Docker 构建上下文，避免镜像过大。

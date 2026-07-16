@@ -27,6 +27,7 @@ Recommended runtime data environment variable:
 
 ```text
 WEB2PY_RUNTIME_ROOT=/app/runtime
+WEB2PY_RUNTIME_SKIP_APPS=admin welcome
 ```
 
 Recommended persistent storage:
@@ -36,7 +37,7 @@ Host path:      /opt/web2py
 Container path: /app/runtime
 ```
 
-At startup, `docker-entrypoint.sh` automatically creates app runtime directories and symlinks:
+At startup, `docker-entrypoint.sh` automatically creates runtime directories and symlinks for business apps. Built-in apps such as `admin` and `welcome` stay inside the container by default, using ordinary non-persistent runtime directories.
 
 ```text
 /app/applications/<app>/databases -> /app/runtime/<app>/databases

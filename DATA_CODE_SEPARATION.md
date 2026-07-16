@@ -78,7 +78,7 @@ applications/*/private/
 容器目录: /app/runtime
 ```
 
-容器启动时，`docker-entrypoint.sh` 会自动为每个应用创建运行数据目录，并把应用内部目录软链接过去：
+容器启动时，`docker-entrypoint.sh` 会自动为业务应用创建运行数据目录，并把应用内部目录软链接过去。默认跳过 `admin` 和 `welcome`，因为它们是 web2py 内置默认应用，只在容器内使用普通非持久化运行目录：
 
 ```text
 /app/applications/<app>/databases -> /app/runtime/<app>/databases

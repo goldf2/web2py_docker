@@ -21,6 +21,7 @@ Thumbs.db
 *.DS_Store
 index.yaml
 routes.py
+!routes.py
 logging.conf
 gluon/tests/VERSION
 gluon/tests/sql.log
