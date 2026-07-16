@@ -27,6 +27,7 @@ Recommended runtime data environment variable:
 
 ```text
 WEB2PY_RUNTIME_ROOT=/app/runtime
+WEB2PY_RUNTIME_DIRS=databases uploads sessions errors cache
 WEB2PY_RUNTIME_SKIP_APPS=admin welcome
 ```
 
@@ -45,8 +46,9 @@ At startup, `docker-entrypoint.sh` automatically creates runtime directories and
 /app/applications/<app>/sessions  -> /app/runtime/<app>/sessions
 /app/applications/<app>/errors    -> /app/runtime/<app>/errors
 /app/applications/<app>/cache     -> /app/runtime/<app>/cache
-/app/applications/<app>/private   -> /app/runtime/<app>/private
 ```
+
+`private` is intentionally not writable by default. Prefer environment variables or Coolify secrets for sensitive settings. If a legacy app must use `private/appconfig.ini`, mount that file or directory separately and preferably read-only.
 
 When adding a new app, no new Coolify storage entry is required as long as `/app/runtime` is already mounted. The entrypoint will create `/app/runtime/<new-app>/...` automatically on container start.
 
@@ -78,7 +80,7 @@ web2py writes runtime data under each application directory, especially:
 - `applications/<app>/sessions`
 - `applications/<app>/errors`
 - `applications/<app>/uploads`
-- `applications/<app>/private` when the app still reads `private/appconfig.ini`
+- `applications/<app>/private` when the app still reads `private/appconfig.ini`; keep this read-only where possible.
 
 For a production app, prefer one persistent storage root mounted at `/app/runtime`. Avoid mounting an empty volume over the whole `applications` directory unless you also initialize it with your app files, because that hides the applications copied into the image.
 

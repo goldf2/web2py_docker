@@ -86,12 +86,11 @@ applications/*/private/
 /app/applications/<app>/sessions  -> /app/runtime/<app>/sessions
 /app/applications/<app>/errors    -> /app/runtime/<app>/errors
 /app/applications/<app>/cache     -> /app/runtime/<app>/cache
-/app/applications/<app>/private   -> /app/runtime/<app>/private
 ```
 
 这样新建 app 后不需要在 Coolify 里逐个增加挂载，只要重新部署或重启容器，入口脚本会自动创建 `/app/runtime/<new-app>/...` 并建立软链接。
 
-如果 `private/` 里只有密钥或环境配置，长期仍建议改成 Coolify 环境变量。短期保留文件时，`private/` 会随上述机制进入持久化目录。
+`private/` 默认不外置为可写目录。它通常存放配置和密钥，应优先使用 Coolify 环境变量或 Secret。短期必须保留 `private/appconfig.ini` 时，建议单独挂载该文件或目录，并尽量只读。
 
 ## 迁移步骤
 
@@ -101,7 +100,7 @@ applications/*/private/
 
 ```sh
 find applications -maxdepth 3 -type d \
-  \( -name databases -o -name uploads -o -name sessions -o -name errors -o -name cache -o -name private \) \
+  \( -name databases -o -name uploads -o -name sessions -o -name errors -o -name cache \) \
   | sort
 ```
 
@@ -113,7 +112,6 @@ rsync -a applications/<app>/databases /srv/web2py-data/<app>/
 rsync -a applications/<app>/uploads /srv/web2py-data/<app>/
 rsync -a applications/<app>/sessions /srv/web2py-data/<app>/
 rsync -a applications/<app>/errors /srv/web2py-data/<app>/
-rsync -a applications/<app>/private /srv/web2py-data/<app>/
 ```
 
 5. 确认 Git 只管理代码目录，不管理运行数据目录。
@@ -149,5 +147,5 @@ login = username:password
 1. 镜像里只放代码。
 2. 主机 `/opt/web2py` 挂载到容器 `/app/runtime`。
 3. `docker-entrypoint.sh` 自动创建每个 app 的运行目录软链接。
-4. `private/appconfig.ini` 暂时放入 `/app/runtime/<app>/private`。
+4. `private/appconfig.ini` 暂时通过 Coolify 文件挂载或环境变量处理，不放入默认可写 runtime。
 5. 部署成功后，再把敏感配置逐步改成环境变量。

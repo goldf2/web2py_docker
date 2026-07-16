@@ -25,8 +25,9 @@ applications/*/uploads
 applications/*/sessions
 applications/*/errors
 applications/*/cache
-applications/*/private
 ```
+
+`private` 默认不作为可写持久化目录。
 
 ## 测试地址
 

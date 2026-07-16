@@ -3,8 +3,9 @@ set -eu
 
 APP_ROOT="${APP_ROOT:-/app}"
 WEB2PY_RUNTIME_ROOT="${WEB2PY_RUNTIME_ROOT:-$APP_ROOT/runtime}"
-WEB2PY_RUNTIME_DIRS="${WEB2PY_RUNTIME_DIRS:-databases uploads sessions errors cache private}"
+WEB2PY_RUNTIME_DIRS="${WEB2PY_RUNTIME_DIRS:-databases uploads sessions errors cache}"
 WEB2PY_RUNTIME_SKIP_APPS="${WEB2PY_RUNTIME_SKIP_APPS:-admin welcome}"
+WEB2PY_INTERNAL_DIRS="${WEB2PY_INTERNAL_DIRS:-databases uploads sessions errors cache private}"
 
 mkdir -p "$WEB2PY_RUNTIME_ROOT"
 
@@ -13,7 +14,7 @@ for app_dir in "$APP_ROOT"/applications/*; do
     app_name="$(basename "$app_dir")"
     case " $WEB2PY_RUNTIME_SKIP_APPS " in
         *" $app_name "*)
-            for runtime_dir in $WEB2PY_RUNTIME_DIRS; do
+            for runtime_dir in $WEB2PY_INTERNAL_DIRS; do
                 mkdir -p "$app_dir/$runtime_dir"
             done
             continue
