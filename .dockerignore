@@ -24,8 +24,6 @@ applications/*
 !applications/admin/**
 !applications/welcome/
 !applications/welcome/**
-!applications/examples/
-!applications/examples/**
 !applications/soloj1/
 !applications/soloj1/**
 applications/*/cache/

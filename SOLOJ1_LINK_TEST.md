@@ -12,7 +12,6 @@
 ```text
 applications/admin
 applications/welcome
-applications/examples
 applications/soloj1
 ```
 

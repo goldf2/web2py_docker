@@ -46,8 +46,6 @@ binaries/*old*
 applications/*
 !applications/welcome
 !applications/welcome/*
-!applications/examples
-!applications/examples/*
 !applications/admin
 !applications/admin/*
 !applications/soloj1
