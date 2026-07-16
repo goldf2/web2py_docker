@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>苏工院-创新模具 校企实习报告交付系统 | Web2py风格</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #eef2f5;
+            font-family: 'Segoe UI', 'Roboto', 'Times New Roman', '宋体', SimSun, sans-serif;
+            padding: 30px 20px;
+        }
+
+        /* 主容器 Web2py 风格卡片 */
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        /* 头部 */
+        .header {
+            background: #2c3e50;
+            color: white;
+            padding: 20px 30px;
+            border-bottom: 4px solid #e67e22;
+        }
+        .header h1 {
+            font-size: 1.9rem;
+            letter-spacing: 1px;
+        }
+        .header p {
+            opacity: 0.8;
+            margin-top: 6px;
+        }
+
+        /* 登录栏 */
+        .auth-bar {
+            background: #f8f9fa;
+            padding: 12px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            border-bottom: 1px solid #ddd;
+        }
+        .auth-form {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .auth-form input {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            width: 160px;
+        }
+        .auth-form button {
+            background: #2c3e50;
+            color: white;
+            border: none;
+            padding: 6px 18px;
+            border-radius: 24px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        .auth-form button:hover {
+            background: #e67e22;
+        }
+        .logout-btn {
+            background: #95a5a6;
+            margin-left: 10px;
+        }
+        .role-badge {
+            background: #ecf0f1;
+            padding: 5px 12px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        /* 主体布局两列 */
+        .main-dashboard {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .sidebar {
+            width: 280px;
+            background: #fcfcfc;
+            border-right: 1px solid #e0e4e8;
+            padding: 20px 0 20px 20px;
+        }
+        .content {
+            flex: 1;
+            padding: 24px 28px;
+            background: white;
+        }
+
+        /* 侧边菜单 */
+        .menu-item {
+            padding: 10px 15px;
+            margin: 5px 0;
+            cursor: pointer;
+            border-radius: 30px 0 0 30px;
+            transition: 0.2s;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+        .menu-item.active {
+            background: #e67e22;
+            color: white;
+        }
+        .menu-item:hover:not(.active) {
+            background: #ecf0f1;
+        }
+
+        /* 报告卡片 */
+        .report-card {
+            background: #fef9f0;
+            border-left: 5px solid #e67e22;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .report-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .report-meta {
+            font-size: 0.8rem;
+            color: #7f8c8d;
+            margin-bottom: 12px;
+            border-bottom: 1px dashed #ddd;
+            padding-bottom: 6px;
+        }
+        .report-content {
+            line-height: 1.5;
+            margin: 12px 0;
+        }
+        .comment-box {
+            background: #f2f4f6;
+            padding: 12px;
+            border-radius: 12px;
+            margin-top: 14px;
+        }
+        textarea, input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 12px;
+            font-family: inherit;
+        }
+        button {
+            background: #e67e22;
+            border: none;
+            color: white;
+            padding: 6px 16px;
+            border-radius: 24px;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+        .btn-secondary {
+            background: #7f8c8d;
+        }
+        .grid-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .soft-link {
+            background: #eef2fa;
+            padding: 12px 20px;
+            border-radius: 20px;
+            text-decoration: none;
+            color: #2c3e50;
+            font-weight: 500;
+            border: 1px solid #cfdde6;
+            transition: 0.2s;
+            display: inline-block;
+        }
+        .soft-link:hover {
+            background: #d5e0ec;
+            border-color: #e67e22;
+        }
+        .news-item {
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #eee;
+        }
+        .badge {
+            background: #e67e22;
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-right: 8px;
+        }
+        .footer {
+            background: #f8f9fa;
+            padding: 16px 30px;
+            text-align: center;
+            font-size: 0.8rem;
+            border-top: 1px solid #ddd;
+            color: #5d6d7e;
+        }
+        @media (max-width: 780px) {
+            .sidebar { width: 100%; border-right: none; border-bottom: 1px solid #eee; }
+        }
+        .warning-note {
+            font-size: 0.75rem;
+            color: #e67e22;
+            margin-top: 6px;
+        }
+    </style>
+</head>
+<body>
+<div class="container" id="app">
+    <div class="header">
+        <h1>📊 苏工院·创新模具 实习报告交付系统</h1>
+        <p>基于Web2py框架 | 校企合作数字化平台 | MVC全栈架构成果展示</p>
+    </div>
+    <div class="auth-bar">
+        <div class="role-badge" v-if="currentRole !== 'guest'">👤 当前角色：<strong>[[ roleName ]]</strong> ([[ currentRole ]])</div>
+        <div class="role-badge" v-else>🌐 访客模式 (免密码浏览)</div>
+        <div class="auth-form">
+            <input type="password" v-model="inputPassword" placeholder="访问密码 (123/456/789)" @keyup.enter="login">
+            <button @click="login">🔑 登录</button>
+            <button class="logout-btn" @click="logout" v-if="currentRole !== 'guest'">退出</button>
+        </div>
+    </div>
+    <div class="main-dashboard">
+        <div class="sidebar">
+            <div class="menu-item" :class="{active: activeMenu === 'reports'}" @click="activeMenu='reports'">📄 实习报告总览</div>
+            <div class="menu-item" :class="{active: activeMenu === 'achievements'}" @click="activeMenu='achievements'">🏆 课题成果 & 建模分析</div>
+            <div class="menu-item" :class="{active: activeMenu === 'business'}" @click="activeMenu='business'">🔗 业务软件入口（虚拟链接）</div>
+            <div class="menu-item" :class="{active: activeMenu === 'about'}" @click="activeMenu='about'">🤝 校企合作 · 新闻动态</div>
+        </div>
+        <div class="content">
+            <!-- 实习报告模块 -->
+            <div v-if="activeMenu === 'reports'">
+                <h2 style="margin-bottom: 16px;">📑 实习报告与指导评语</h2>
+                <div v-for="(report, idx) in reportsList" :key="idx" class="report-card">
+                    <div class="report-title">[[ report.title ]]</div>
+                    <div class="report-meta">作者：[[ report.author ]] | 提交时间：[[ report.date ]] | 类型：[[ report.type ]]</div>
+                    <div class="report-content">[[ report.contentPreview ]]<span v-if="report.fullContent && (currentRole !== 'guest')"> <strong>【完整内容】</strong> [[ report.fullContent ]]</span><span v-else-if="currentRole === 'guest'"> ... <em>(访客模式仅显示摘要，登录查看完整报告)</em></span></div>
+                    <!-- 老师评语区域（仅登录且角色>=学生可编辑评语？根据权限）-->
+                    <div class="comment-box" v-if="currentRole !== 'guest'">
+                        <div><strong>📝 指导老师评语：</strong></div>
+                        <div v-if="report.teacherComment">[[ report.teacherComment ]]</div>
+                        <div v-else style="color:#999;">暂无评语，可编辑添加。</div>
+                        <textarea v-if="canEditComment" v-model="report.editComment" rows="2" placeholder="输入评语..."></textarea>
+                        <button v-if="canEditComment" @click="saveComment(idx)">保存评语</button>
+                    </div>
+                    <div class="comment-box" v-else>
+                        <em>🔒 登录后可查看老师评语并参与互动</em>
+                    </div>
+                </div>
+                <!-- 学生报告编辑区（权限123及以上） -->
+                <div v-if="canEditStudentReport" style="margin-top: 32px; background:#f9f2e0; padding: 18px; border-radius: 20px;">
+                    <h3>✍️ 学生报告编辑区 (密码123/456/789可编辑)</h3>
+                    <div><strong>编辑周报示例：</strong> 周报/月报/日报摘要</div>
+                    <textarea v-model="newReportContent" rows="4" placeholder="撰写新的实习报告内容 (支持markdown风格) ..." style="margin-top: 8px;"></textarea>
+                    <button @click="addStudentReport">➕ 添加新报告（周报/总结）</button>
+                    <p class="warning-note">注：添加后模拟学生报告更新，体现“实习报告在WEB上的设计”。</p>
+                </div>
+            </div>
+
+            <!-- 课题成果 & 数学建模 -->
+            <div v-if="activeMenu === 'achievements'">
+                <h2>🏅 实习课题成果 · 数学建模与算法分析</h2>
+                <div class="report-card">
+                    <div class="report-title">📊 排队论模型：发车时刻表与产出优化</div>
+                    <div>基于发车数据与生产线产出，构建M/M/1排队模型，优化调度策略。结论：平均等待时间降低18%。<br><strong>算法实现：</strong> Python + Simpy 仿真库，已集成至内部系统。</div>
+                </div>
+                <div class="report-card">
+                    <div class="report-title">🔗 集团项目管理网络工程 · 关键路线分析 (CPM)</div>
+                    <div>针对集团项目管理表，识别关键路径，压缩工期建议。展示网络图与浮动时间。 <br><strong>操作说明书：</strong> 已编写完整CPM分析步骤文档。</div>
+                </div>
+                <div class="report-card">
+                    <div class="report-title">📈 公司运行关键指标变化规律 (时间序列+回归)</div>
+                    <div>基于公司指数管理页面数据，建立ARIMA模型预测质量指数趋势，提供预警阈值。R²达0.86。<br><strong>交付物：</strong> 数学模型报告、算法源码、可视化仪表板。</div>
+                </div>
+                <div class="report-card">
+                    <div class="report-title">✅ “表·屏·据 + 表·面” 课题全景</div>
+                    <div>部门级：工单数据表/焊接电子屏/检测数据清洗系统全部运行；集团级：项目管理网络分析与指数驾驶舱完成迭代。<br>📖 所有操作过程说明书已归档至本机部署/云端。</div>
+                </div>
+            </div>
+
+            <!-- 业务软件虚拟链接页面 -->
+            <div v-if="activeMenu === 'business'">
+                <h2>📌 相关业务系统虚拟入口（模拟集成环境）</h2>
+                <p>以下为校企合作关联业务软件链接，点击跳转至虚拟页面（仅示意架构，体现MVC全栈式集成）。</p>
+                <div class="grid-links">
+                    <a href="#" class="soft-link" @click.prevent="showDemoMsg('发车时刻表系统')">🚌 发车时刻表 · 运行</a>
+                    <a href="#" class="soft-link" @click.prevent="showDemoMsg('焊接电子屏监控系统')">🖥️ 焊接电子屏 · 运行</a>
+                    <a href="#" class="soft-link" @click.prevent="showDemoMsg('检测中心数据平台')">📊 检测中心数据 · 运行</a>
+                    <a href="#" class="soft-link" @click.prevent="showDemoMsg('集团项目管理表(网络工程)')">📋 集团项目管理表 · 运行</a>
+                    <a href="#" class="soft-link" @click.prevent="showDemoMsg('公司指数管理页面')">📈 公司指数管理页面 · 运行</a>
+                    <a href="#" class="soft-link" @click.prevent="showDemoMsg('MVC全栈实习成果总平台')">🌐 MVC全栈总平台 (部署演示)</a>
+                </div>
+                <div class="report-card" style="margin-top: 28px;">
+                    <strong>📎 部署环境说明：</strong> 本机部署(localhost)、内部服务器(10.0.0.1)、云端(https://internship.demo) 均已配置。以上业务系统均通过Web2py路由集成。
+                </div>
+                
+                <!-- PDF文件展示区域 -->
+                <div class="report-card" style="margin-top: 28px;">
+                    <h3>📄 PDF文件上传与展示</h3>
+                    
+                    <!-- 上传说明 -->
+                    <div style="background: #e7f3ff; padding: 12px; border-radius: 8px; margin-bottom: 20px;">
+                        <p style="margin: 0;"><strong>📌 上传说明：</strong> 由于这是前端演示版本，文件不会真正上传到服务器。请将PDF文件手动放置在 <code>static/pdf</code> 目录中，然后在下方输入文件名进行添加。</p>
+                    </div>
+                    
+                    <!-- 文件添加表单 -->
+                    <div style="margin-bottom: 24px;">
+                        <h4>添加PDF文件</h4>
+                        <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                            <input type="text" v-model="selectedFile" placeholder="请输入PDF文件名（例如：sample.pdf）" style="flex: 1; min-width: 200px; padding: 8px 12px; border: 1px solid #ccc; border-radius: 20px; font-size: 0.9rem;">
+                            <button @click="addFile" style="white-space: nowrap;">📤 添加文件</button>
+                        </div>
+                    </div>
+                    
+                    <!-- 已添加文件列表 -->
+                    <div v-if="uploadedFiles.length > 0" style="margin-bottom: 24px;">
+                        <h4>已添加文件</h4>
+                        <div style="background: #f8f9fa; padding: 16px; border-radius: 8px; margin-top: 8px;">
+                            <div v-for="(file, index) in uploadedFiles" :key="index" style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #e9ecef;">
+                                <div>
+                                    <span class="badge">PDF</span>
+                                    <span style="margin-left: 8px;">[[ file.name ]]</span>
+                                </div>
+                                <div style="display: flex; gap: 8px;">
+                                    <button @click="viewFile(file.url)" style="padding: 4px 12px; font-size: 0.8rem;">👁️ 查看</button>
+                                    <button @click="deleteFile(index)" style="padding: 4px 12px; font-size: 0.8rem; background: #dc3545;">🗑️ 删除</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- PDF文件预览 -->
+                    <div v-if="uploadedFiles.length > 0">
+                        <h4>文件预览</h4>
+                        <div style="margin-top: 16px; height: 500px; border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
+                            <iframe :src="uploadedFiles[0].url" width="100%" height="100%" frameborder="0"></iframe>
+                        </div>
+                        <p style="margin-top: 12px; font-size: 0.9rem; color: #666;">显示的是第一个添加的PDF文件。</p>
+                    </div>
+                    <div v-else style="text-align: center; padding: 40px; color: #666;">
+                        <p>暂无添加的PDF文件</p>
+                        <p>请在上方输入PDF文件名进行添加</p>
+                        <p style="margin-top: 12px; font-size: 0.8rem;">示例：sample.pdf</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 校企合作新闻动态 (访客可见主要内容) -->
+            <div v-if="activeMenu === 'about'">
+                <h2>🎓 校企合作 · 成果意义与新闻动态</h2>
+                <div class="news-item">
+                    <span class="badge">最新</span> <strong>苏工院-创新模具共建“数学建模实训基地”揭牌</strong><br>
+                    2026年3月，双方深化产教融合，依托“表屏据+表面”课题，培养学生数据工程能力，预计每年输送实习生30人。
+                </div>
+                <div class="news-item">
+                    <span class="badge">成果</span> <strong>全栈报告交付系统上线</strong><br>
+                    实现实习报告、月报/周报/日报WEB化管理，支持多角色权限，成为校企合作数字化标杆。
+                </div>
+                <div class="news-item">
+                    <strong>📢 排队论优化成果被企业采纳</strong><br>
+                    实习生基于发车时刻表构建数学模型，提升物料流转效率12%，获金老师高度评价。
+                </div>
+                <div class="news-item">
+                    <strong>🏆 集团项目管理网络工程关键路线分析报告</strong><br>
+                    通过CPM算法识别瓶颈工序，缩短项目周期5天，为企业节省成本约20万元/年。
+                </div>
+                <div class="report-card" style="margin-top: 12px;">
+                    <strong>🌟 校企合作意义：</strong> 本系统完整展示了“MVC全栈网站架构 + 实习报告WEB设计 + 数学建模落地”，并支持本地/内部服务器/云端部署，体现了“3+2”课题结构的卓越成效。
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        © 2026 苏州工学院数学与统计学院 & 创新模具技术团队 | 基于Web2py理念构建 | 报告交付系统支持本机/内网/云部署
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+<script>
+    // 模拟初始报告数据
+    const mockReports = [
+        { id:1, title:"实习月报（3月）· 数据输入与排队论初探", author:"黄旌", date:"2026-03-20", type:"月报",
+          contentPreview:"完成发车时刻表数据清洗，初步建立排队模型框架。",
+          fullContent:"详细：利用Python处理发车时刻表500条记录，分析到达率与服务率，完成M/M/1仿真预研。",
+          teacherComment:"模型思路清晰，建议增加实际产出数据验证。", editComment:"" },
+        { id:2, title:"部门级课题报告：焊接电子屏数据看板", author:"郑宏环宇", date:"2026-03-18", type:"课题报告",
+          contentPreview:"基于Vue.js开发实时屏显，展示产线效率。",
+          fullContent:"实现websocket模拟数据刷新，前端组件化设计，对接生产管理办公室需求。",
+          teacherComment:"界面友好，待集成后端真实API。", editComment:"" },
+        { id:3, title:"集团课题 · 项目管理网络工程关键路线分析", author:"刘永博士指导团队", date:"2026-03-15", type:"算法报告",
+          contentPreview:"利用CPM算法分析集团项目管理表，识别关键路径。",
+          fullContent:"绘制网络图，计算最早最晚时间，提出压缩方案及操作说明书。",
+          teacherComment:"分析深度符合卓越分标准，推荐企业试用。", editComment:"" },
+        { id:4, title:"周报(第6周)：公司指数管理页面与指标建模", author:"实习小组", date:"2026-03-10", type:"周报",
+          contentPreview:"完成指数页面数据接口对接，初步建立线性回归预测。",
+          fullContent:"使用Python sklearn分析质量指标与设备OEE相关性，准确率82%。",
+          teacherComment:"继续优化特征工程，争取达到90%以上。", editComment:"" }
+    ];
+
+    new Vue({
+        el: '#app',
+        delimiters: ['[[', ']]'],
+        data: {
+            currentRole: 'guest',   // guest, student(123), teacher(456), admin(789),
+            inputPassword: '',
+            activeMenu: 'reports',
+            reportsList: JSON.parse(JSON.stringify(mockReports)),
+            newReportContent: '',
+            // 文件上传相关
+            selectedFile: null,
+            uploadedFiles: [],
+        },
+        computed: {
+            roleName() {
+                if(this.currentRole === 'student') return '学生/报告编辑者';
+                if(this.currentRole === 'teacher') return '指导老师/辅导员';
+                if(this.currentRole === 'admin') return '超级管理员(全部权限)';
+                return '访客';
+            },
+            // 是否可以编辑评语 (教师或管理员)
+            canEditComment() {
+                return this.currentRole === 'teacher' || this.currentRole === 'admin';
+            },
+            // 是否可以编辑学生报告 (密码123 或 456 或 789)
+            canEditStudentReport() {
+                return this.currentRole === 'student' || this.currentRole === 'teacher' || this.currentRole === 'admin';
+            }
+        },
+        methods: {
+            login() {
+                const pwd = this.inputPassword.trim();
+                if(pwd === '123') {
+                    this.currentRole = 'student';
+                } else if(pwd === '456') {
+                    this.currentRole = 'teacher';
+                } else if(pwd === '789') {
+                    this.currentRole = 'admin';
+                } else {
+                    alert('密码错误！\n123:学生/报告编辑  456:教师评语  789:全部权限\n留空则为访客模式');
+                    return;
+                }
+                this.inputPassword = '';
+                alert(`登录成功！当前角色: ${this.roleName}`);
+            },
+            logout() {
+                this.currentRole = 'guest';
+                alert('已退出，现为访客模式（免密码）');
+            },
+            saveComment(idx) {
+                if(!this.canEditComment) {
+                    alert('您没有编辑评语权限');
+                    return;
+                }
+                const newComment = this.reportsList[idx].editComment;
+                if(newComment !== undefined && newComment !== '') {
+                    this.reportsList[idx].teacherComment = newComment;
+                    this.reportsList[idx].editComment = '';
+                    alert('评语已保存');
+                } else {
+                    alert('评语不能为空');
+                }
+            },
+            addStudentReport() {
+                if(!this.canEditStudentReport) {
+                    alert('当前无编辑报告权限，请使用密码123/456/789登录');
+                    return;
+                }
+                if(this.newReportContent.trim() === '') {
+                    alert('请输入报告内容');
+                    return;
+                }
+                const newId = this.reportsList.length + 1;
+                const now = new Date().toISOString().slice(0,10);
+                this.reportsList.unshift({
+                    id: newId,
+                    title: `实习报告（${now}）· 新增内容`,
+                    author: this.currentRole === 'student' ? '实习生' : (this.currentRole === 'teacher' ? '指导老师' : '管理员'),
+                    date: now,
+                    type: '日报/周报',
+                    contentPreview: this.newReportContent.substring(0, 60) + (this.newReportContent.length>60?'...':''),
+                    fullContent: this.newReportContent,
+                    teacherComment: '',
+                    editComment: ''
+                });
+                this.newReportContent = '';
+                alert('新报告已添加，完全符合“日报48份、周报12份、月报3份”线上化要求');
+            },
+            showDemoMsg(systemName) {
+                alert(`🔗 [虚拟链接] ${systemName}\n该业务软件已稳定运行，实际集成于公司内部网络。本系统作为MVC全栈架构门户，提供统一入口。`);
+            },
+            // 文件添加相关方法
+            addFile() {
+                if (!this.selectedFile) {
+                    alert('请输入PDF文件名');
+                    return;
+                }
+                
+                if (!this.selectedFile.endsWith('.pdf')) {
+                    alert('请输入PDF格式的文件名');
+                    return;
+                }
+                
+                // 添加文件
+                const fileName = this.selectedFile.trim();
+                this.uploadedFiles.push({
+                    name: fileName,
+                    url: `/soloj1/static/pdf/${fileName}`
+                });
+                
+                alert(`文件 ${fileName} 添加成功！`);
+                this.selectedFile = '';
+            },
+            viewFile(fileUrl) {
+                window.open(fileUrl, '_blank');
+            },
+            deleteFile(index) {
+                if (confirm('确定要删除这个文件吗？')) {
+                    this.uploadedFiles.splice(index, 1);
+                    alert('文件已删除');
+                }
+            }
+        },
+        mounted() {
+            // 初始化时将编辑评语字段同步
+            this.reportsList.forEach(r => { r.editComment = ''; });
+        }
+    });
+</script>
+</body>
+</html>

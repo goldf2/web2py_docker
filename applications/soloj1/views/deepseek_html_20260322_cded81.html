@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>接待议程计划(1小时) | 实习期规划(含甘特图)</title>
+    <style>
+        /* 全局样式 - 纯黑白/灰度，Word风格，A4横向，无彩色 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #c0c0c0;
+            font-family: 'Times New Roman', '宋体', SimSun, '微软雅黑', serif;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+        }
+
+        /* A4横向容器 */
+        .page {
+            width: 297mm;
+            min-height: 210mm;
+            background: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            padding: 12mm 10mm;
+            margin: 0 auto;
+            page-break-after: avoid;
+            break-inside: avoid;
+            position: relative;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+                margin: 0;
+            }
+            .page {
+                box-shadow: none;
+                padding: 10mm;
+                margin: 0;
+                page-break-after: always;
+            }
+            .page:last-child {
+                page-break-after: auto;
+            }
+            .gantt-grid {
+                break-inside: avoid;
+            }
+        }
+
+        h1 {
+            font-size: 22pt;
+            text-align: center;
+            margin: 8px 0 12px 0;
+            font-weight: bold;
+            letter-spacing: 2px;
+            border-bottom: 1.5px solid #000;
+            padding-bottom: 8px;
+        }
+        h2 {
+            font-size: 16pt;
+            margin: 16px 0 10px 0;
+            border-left: 4px solid #000;
+            padding-left: 10px;
+            font-weight: 600;
+        }
+        h3 {
+            font-size: 14pt;
+            margin: 12px 0 6px 0;
+            font-weight: 600;
+            background: #f0f0f0;
+            padding: 4px 8px;
+            border: 1px solid #aaa;
+        }
+        .subtitle {
+            text-align: center;
+            font-size: 11pt;
+            margin-top: -8px;
+            margin-bottom: 16px;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0;
+            font-size: 11pt;
+        }
+        th, td {
+            border: 1px solid #000;
+            padding: 6px 8px;
+            vertical-align: top;
+        }
+        th {
+            background-color: #eaeaea;
+            font-weight: 700;
+            text-align: center;
+        }
+        .info-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 10px 0;
+            border: 1px solid #aaa;
+            padding: 8px;
+            background: #fefefe;
+        }
+        .info-item {
+            flex: 1;
+            padding: 4px 8px;
+        }
+        .signature {
+            margin-top: 24px;
+            text-align: right;
+            border-top: 1px solid #aaa;
+            padding-top: 12px;
+            font-size: 10.5pt;
+        }
+        .footer-note {
+            font-size: 9pt;
+            color: #444;
+            margin-top: 16px;
+            text-align: center;
+        }
+        /* 甘特图样式 - 纯灰度 */
+        .gantt-container {
+            margin: 16px 0;
+            overflow-x: auto;
+        }
+        .gantt-grid {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 9pt;
+            table-layout: fixed;
+        }
+        .gantt-grid th, .gantt-grid td {
+            border: 1px solid #000;
+            padding: 6px 2px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        .gantt-grid th {
+            background: #ddd;
+            font-weight: 700;
+        }
+        .week-cell {
+            background-color: #fff;
+        }
+        .task-phase {
+            background-color: #d9d9d9;
+            font-weight: normal;
+        }
+        .milestone {
+            background-color: #c0c0c0;
+            font-weight: bold;
+        }
+        .legend {
+            margin: 8px 0;
+            font-size: 9pt;
+            display: flex;
+            gap: 20px;
+            border-top: 1px solid #aaa;
+            padding-top: 8px;
+        }
+        .legend span {
+            display: inline-block;
+            width: 20px;
+            height: 14px;
+            background: #d9d9d9;
+            border: 1px solid #000;
+            margin-right: 6px;
+        }
+        .bold {
+            font-weight: 700;
+        }
+        hr {
+            margin: 12px 0;
+            border: 0.5px solid #aaa;
+        }
+    </style>
+</head>
+<body>
+    <!-- 第一页：接待议程计划 (1小时紧凑版) A4横向 -->
+    <div class="page">
+        <h1>苏州工学院来访接待议程计划</h1>
+        <div class="subtitle">创新模具技术团队 & 苏州工学院数学与统计学院 | 2026年3月23日（周一）下午13:00-14:00（总时长1小时）</div>
+        
+        <table style="margin-bottom: 12px;">
+            <tr>
+                <th style="width: 18%;">时间</th>
+                <th style="width: 25%;">环节</th>
+                <th style="width: 57%;">内容及说明</th>
+            </tr>
+             <tr>
+                <td style="text-align: center;">13:00-13:10<br>(10min)</td>
+                <td><strong>1. 迎接 & 停车引导</strong></td>
+                <td>VIP停车场预留专用车位，专人迎接来宾（刘永博士、唐国强教授及学生团队）。引导至贵宾会议室，简短寒暄。</td>
+             </tr>
+             <tr>
+                <td style="text-align: center;">13:10-13:25<br>(15min)</td>
+                <td><strong>2. 座谈交流（公司概要及团队介绍）</strong></td>
+                <td>
+                    介绍公司发展历程、核心业务及数字化创新成果；<br>
+                    企业方出席人员：金老师（客座教授，2006年起与常熟理工数学系交流）、张晨琰（澳大利亚硕士）、顾陆峰（云端系统架构专家）、顾胜（本地部署专家）、沈总（机械专业企管专家）。<br>
+                    校方介绍：系主任刘永博士、唐国强教授及实习学生情况。
+                </td>
+             </tr>
+             <tr>
+                <td style="text-align: center;">13:25-13:45<br>(20min)</td>
+                <td><strong>3. 工厂参观（精简动线）</strong></td>
+                <td>
+                    <strong>路线安排：</strong><br>
+                    · 品质工程检查室（观摩检测数据采集，对接实习课题）<br>
+                    · 制造现场生产线（了解MES系统及工单流转）<br>
+                    · 生产管理办公室（数字化管理工具展示）<br>
+                    全程由金老师、顾陆峰专家讲解智能制造与数字化转型实战。
+                </td>
+             </tr>
+             <tr>
+                <td style="text-align: center;">13:45-13:55<br>(10min)</td>
+                <td><strong>4. 实习规划概要 & 签约备忘</strong></td>
+                <td>
+                    · 实习交付目标：MVC全栈网站架构 + 实习报告WEB化部署（本机/内网/云）<br>
+                    · 文档体系：总结报告1份、月报3份、周报12份、日报48份，全部线上化呈现<br>
+                    · “3+2”课题结构（3项部门级+2项集团级课题）<br>
+                    · 现场签署实习合作备忘录
+                </td>
+             </tr>
+             <tr>
+                <td style="text-align: center;">13:55-14:00<br>(5min)</td>
+                <td><strong>5. 合影 & 结束</strong></td>
+                <td>公司大厅合影留念，欢送来宾。</td>
+             </tr>
+        </table>
+        
+        <div class="info-row">
+            <div class="info-item"><strong>📍 接待地点：</strong>公司VIP停车场 → 贵宾会议室 → 工厂参观动线</div>
+            <div class="info-item"><strong>👥 校方出席：</strong>刘永博士（系主任）、唐国强教授、学生代表</div>
+            <div class="info-item"><strong>🤝 企业出席：</strong>金老师、张晨琰、顾陆峰、顾胜、沈总及相关主管</div>
+        </div>
+        
+        <div style="margin: 10px 0; padding: 6px; border: 1px solid #aaa; background: #fafafa;">
+            <strong>📋 备注：</strong>工厂参观期间请遵守现场安全规定。交流材料准备“创新模具参与人员历史渊源”文档（金老师2006年起与常熟理工数学系交流，客座教授等）。总议程控制在1小时内，高效务实。
+        </div>
+        
+        <div class="signature">
+            创新模具技术团队 &nbsp;&nbsp; 苏州工学院数学与统计学院<br>
+            制定日期：2026年3月21日 &nbsp;|&nbsp; 版本：V1.1（1小时紧凑议程）
+        </div>
+        <div class="footer-note">* 本议程为A4横向排版，无彩色元素，总时长60分钟，适用于高效对接及打印分发。</div>
+    </div>
+
+    <!-- 第二页：实习期规划（含周栅格甘特图 + 年度任务运行状态） -->
+    <div class="page">
+        <h1>苏州工学院 · 实习期规划（3+2课题制）</h1>
+        <div class="subtitle">实习周期：12周（约2026年4月—7月） | 双导师制 | 全栈网站+数字化文档交付</div>
+        
+        <h2>一、实习总体目标与成果要求</h2>
+        <ul style="margin-left: 24px; margin-bottom: 12px;">
+            <li><strong>核心成果：</strong> 演示基于MVC架构的全栈式网站（前后端分离），实习报告、月报/周报/日报全部WEB端呈现；支持<strong>本机部署、内部服务器、云端部署</strong>三种环境。</li>
+            <li><strong>文档体系：</strong> 最终提交总结报告1份、月报3份、周报12份、日报48份，全部集成于实习平台。</li>
+            <li><strong>过程控制：</strong> 学校指导老师（刘永博士、唐国强教授）+ 企业导师（金老师、顾陆峰、顾胜等）联合督导；安全教育、工作纪律、里程碑评审。</li>
+        </ul>
+        
+        <h2>二、“3+2”课题结构</h2>
+        <div style="display: flex; gap: 12px; flex-wrap: wrap; margin: 8px 0;">
+            <div style="flex:1; border:1px solid #000; padding: 8px;"><strong>🔹 3项部门级/小型课题</strong><br>1. 品质工程数据看板<br>2. 生产管理工单小助手<br>3. 零部件库存检索系统</div>
+            <div style="flex:1; border:1px solid #000; padding: 8px;"><strong>🔸 2项集团/公司级大型课题</strong><br>A. 集团实习成果总平台（MVC全栈架构）<br>B. 智能制造数据中台（预测分析模块）</div>
+        </div>
+        
+        <h2>三、实习周程甘特图（周栅格）</h2>
+        <div class="gantt-container">
+            <table class="gantt-grid">
+                <thead>
+                    <tr>
+                        <th style="width: 22%;">任务/周次</th>
+                        <th style="width: 6%;">W1</th><th style="width: 6%;">W2</th><th style="width: 6%;">W3</th><th style="width: 6%;">W4</th>
+                        <th style="width: 6%;">W5</th><th style="width: 6%;">W6</th><th style="width: 6%;">W7</th><th style="width: 6%;">W8</th>
+                        <th style="width: 6%;">W9</th><th style="width: 6%;">W10</th><th style="width: 6%;">W11</th><th style="width: 6%;">W12</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td class="task-phase" style="text-align:left;">入职培训/安全教育/环境搭建</td>
+                        <td class="week-cell">●</td><td class="week-cell">●</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                    </tr>
+                    <tr><td class="task-phase" style="text-align:left;">部门级课题(品质看板/工单小助手/库存系统)</td>
+                        <td></td><td class="week-cell">●</td><td class="week-cell">●</td><td class="week-cell">●</td><td class="week-cell">●</td><td class="week-cell">●</td><td></td><td></td><td></td><td></td><td></td><td></td>
+                    </tr>
+                    <tr><td class="task-phase" style="text-align:left;">集团课题A：全栈网站平台(MVC+云端/本地)</td>
+                        <td></td><td></td><td></td><td></td><td class="week-cell">●</td><td class="week-cell">●</td><td class="week-cell">●</td><td class="week-cell">●</td><td class="week-cell">●</td><td class="week-cell">●</td><td></td><td></td>
+                    </tr>
+                    <tr><td class="task-phase" style="text-align:left;">集团课题B：数据中台(预测分析/RFM扩展)</td>
+                        <td></td><td></td><td></td><td></td><td></td><td></td><td class="week-cell">●</td><td class="week-cell">●</td><td class="week-cell">●</td><td class="week-cell">●</td><td class="week-cell">●</td><td class="week-cell">●</td>
+                    </tr>
+                    <tr><td class="task-phase" style="text-align:left;">日报/周报/月报&过程文档线上化</td>
+                        <td class="week-cell">●</td><td class="week-cell">●</td><td class="week-cell">●</td><td class="week-cell">●</td><td class="week-cell">●</td><td class="week-cell">●</td><td class="week-cell">●</td><td class="week-cell">●</td><td class="week-cell">●</td><td class="week-cell">●</td><td class="week-cell">●</td><td class="week-cell">●</td>
+                    </tr>
+                    <tr><td class="milestone" style="text-align:left;">最终整合/答辩/部署验收(本机/内网/云)</td>
+                        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="week-cell">●</td><td class="week-cell">●</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="legend">
+            <span></span> 任务执行周 &nbsp;&nbsp;&nbsp; <span style="background:#c0c0c0;"></span> 里程碑/关键节点
+        </div>
+        <p style="font-size: 10pt; margin-top: 6px;"><strong>甘特图说明：</strong> W1~W12为实习周次。部门级课题在第2-6周并行开发；集团级课题A从第5周启动至第10周完成核心开发；集团级课题B从第7周延续至12周；过程文档贯穿全程，W11-12进行最终集成、多环境部署及答辩评审。日报累计48份、周报12份、月报3份均在平台提交。</p>
+        
+        <h2>四、过程管理与考核机制</h2>
+        <table>
+            <tr><th style="width: 25%;">管理维度</th><th>具体内容</th></tr>
+            <tr><td><strong>学校方职责</strong></td><td>刘永博士、唐国强教授定期巡访，跟踪进度；组织理论辅导；与企业联合开展中期检查及终期答辩。</td></tr>
+            <tr><td><strong>公司方管理</strong></td><td>安全教育第一课，工作纪律打卡；企业导师周例会+代码审查；提供开发测试环境及生产数据脱敏支持。</td></tr>
+            <tr><td><strong>成果验收标准</strong></td><td>MVC网站架构完整性、日报/周报线上化存档、三种部署方式验证（本地/内网/云）、用户手册及源码归档。</td></tr>
+        </table>
+        
+        <h2>五、本年度关键任务运行状态（支撑实习实践）</h2>
+        <table>
+            <thead>
+                <tr><th style="width: 40%;">任务模块</th><th>运行状态</th><th>备注</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>1️⃣ 发车时刻表</td><td class="bold">运行</td><td>已稳定上线，可作为前端集成案例参考</td></tr>
+                <tr><td>2️⃣ 焊接电子屏</td><td class="bold">运行</td><td>生产现场数据展示，对接实习工单课题</td></tr>
+                <tr><td>3️⃣ 检测中心数据</td><td class="bold">运行</td><td>品质工程数据源，支撑品质看板开发</td></tr>
+                <tr style="background:#f0f0f0;"><td><strong>🌟 大任务（附加分项，卓越分）</strong></td><td colspan="2"></td></tr>
+                <tr><td>4️⃣ 集团项目管理表</td><td class="bold">运行</td><td>多项目协同管理，为集团级课题提供管理框架</td></tr>
+                <tr><td>5️⃣ 公司指数管理页面</td><td class="bold">运行</td><td>综合指标驾驶舱，可作为数据中台课题参考范例</td></tr>
+            </tbody>
+        </table>
+        <p style="font-size: 10pt; margin-top: -8px;">※ 上述五项系统均已投入实际运行，实习学生可在导师指导下基于真实业务场景进行二次开发或集成学习，提升课题落地价值。</p>
+        
+        <div style="border-top: 1px solid #000; margin: 12px 0 6px;"></div>
+        <div class="signature" style="margin-top: 8px;">
+            苏州工学院数学与统计学院 &nbsp; 创新模具技术团队（金老师、顾陆峰、顾胜、张晨琰、沈总）<br>
+            实习规划确认日期：2026年3月23日 &nbsp;|&nbsp; 版本：实习规划_V2.0（含甘特图及年度运行任务）
+        </div>
+        <div class="footer-note">* 本实习期规划为A4横向排版，采用周栅格甘特图展示12周任务安排，所有内容无彩色，符合正式文档风格。</div>
+    </div>
+</body>
+</html>
